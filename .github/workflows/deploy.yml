@@ -18,10 +18,11 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
+          cache: 'gradle'  # acelera builds
 
       - name: Build JAR (Gradle)
         run: |
-          chmod +x ./gradlew || true
+          chmod +x ./gradlew
           ./gradlew -Dorg.gradle.daemon=false -x test bootJar
           ls -lh build/libs
 
@@ -34,7 +35,8 @@ jobs:
 
       - name: Build & Push (runtime Dockerfile)
         run: |
-          IMAGE=ghcr.io/${{ github.repository_owner }}/ong-backend
+          OWNER_LC=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          IMAGE=ghcr.io/${OWNER_LC}/ong-backend
           TAG=${{ github.sha }}
           docker build -f Dockerfile.ci -t $IMAGE:$TAG -t $IMAGE:latest .
           docker push $IMAGE:$TAG
