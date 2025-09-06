@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS userCommon;
 DROP TABLE IF EXISTS admCommon;
 DROP TABLE IF EXISTS admMaster;
 DROP TABLE IF EXISTS account;
+DROP TABLE IF EXISTS contact;
 
 CREATE TABLE account (
 	id BIGSERIAL PRIMARY KEY,
@@ -178,4 +179,12 @@ CREATE TABLE payment (
     payment_method VARCHAR(20) CHECK (payment_method IN ('PIX', 'CARD')) NOT NULL,
     order_id INT NOT NULL,
 	FOREIGN KEY (order_id) REFERENCES customerOrder(id) ON DELETE CASCADE
+);
+
+CREATE TABLE contact (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    subject TEXT NOT NULL,
+    message TEXT NOT NULL
 );
