@@ -8,8 +8,11 @@ import java.util.Map;
 @RestController
 public class PingController {
 
-    @Value("${APP_BUILD_SHA:dev}")  private String buildSha;
-    @Value("${APP_BUILD_TIME:unknown}") private String buildTime;
+    @Value("${APP_BUILD_SHA:dev}")
+    private String buildSha;
+
+    @Value("${APP_BUILD_TIME:unknown}")
+    private String buildTime;
 
     @GetMapping("/ping")
     public Map<String, Object> ping() {
@@ -20,5 +23,4 @@ public class PingController {
                 "buildTime", buildTime
         );
     }
-
 }
