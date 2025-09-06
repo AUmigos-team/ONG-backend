@@ -21,6 +21,7 @@ public class PingController {
                 "service", "aumigos-api",
                 "buildSha", buildSha,
                 "tetttffet", "teste deploy",
+                "jo linda", "teste vinicius dunnciondandji",
                 "buildTime", buildTime
         );
     }
