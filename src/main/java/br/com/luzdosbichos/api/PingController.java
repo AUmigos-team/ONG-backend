@@ -20,6 +20,7 @@ public class PingController {
                 "ok", true,
                 "service", "aumigos-api",
                 "buildSha", buildSha,
+                "tetttffet", "teste deploy",
                 "buildTime", buildTime
         );
     }
