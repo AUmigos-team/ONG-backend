@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://aumigos-db:5432/aumigos}
+    username: ${SPRING_DATASOURCE_USERNAME:aumigos}
+    password: ${SPRING_DATASOURCE_PASSWORD:aumigos}
+  jpa:
+    hibernate:
+      ddl-auto: none
+  sql:
+    init:
+      mode: never
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info"
+  endpoint:
+    health:
+      probes:
+        enabled: true
