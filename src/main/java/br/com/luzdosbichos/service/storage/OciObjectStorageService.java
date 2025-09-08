@@ -1,4 +1,4 @@
-package br.com.luzdosbichos.storage;
+package br.com.luzdosbichos.service.storage;
 
 import com.oracle.bmc.objectstorage.ObjectStorage;
 import com.oracle.bmc.objectstorage.requests.PutObjectRequest;

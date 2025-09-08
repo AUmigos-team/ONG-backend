@@ -1,4 +1,4 @@
-package br.com.luzdosbichos.storage;
+package br.com.luzdosbichos.service.storage;
 
 import org.springframework.web.multipart.MultipartFile;
 
