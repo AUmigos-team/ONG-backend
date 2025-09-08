@@ -52,5 +52,4 @@ public class SecurityConfig {
         s.registerCorsConfiguration("/**", c);
         return s;
     }
-
 }
