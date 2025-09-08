@@ -20,20 +20,30 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     runtimeOnly  'io.jsonwebtoken:jjwt-impl:0.11.5'
     runtimeOnly  'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
     runtimeOnly 'org.postgresql:postgresql:42.7.4'
+
+    // ===== OCI SDK v3 =====
+    implementation platform('com.oracle.oci.sdk:oci-java-sdk-bom:3.39.2')
+    implementation 'com.oracle.oci.sdk:oci-java-sdk-objectstorage'
+    // Cliente HTTP (Apache) do SDK:
+    implementation 'com.oracle.oci.sdk:oci-java-sdk-addons-apache'
+
+    // (Se você for abandonar S3, pode remover o AWS SDK.
+    // Se quiser manter, mantenha as versões explícitas abaixo)
+    // implementation 'software.amazon.awssdk:auth:2.28.24'
+    // implementation 'software.amazon.awssdk:s3:2.28.24'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -45,7 +55,6 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
-
 
 tasks.named('test') {
     useJUnitPlatform()
