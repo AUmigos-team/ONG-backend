@@ -1,6 +1,6 @@
 package br.com.luzdosbichos.web;
 
-import br.com.luzdosbichos.storage.StorageService;
+import br.com.luzdosbichos.service.storage.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
