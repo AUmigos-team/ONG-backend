@@ -19,3 +19,8 @@ management:
     health:
       probes:
         enabled: true
+
+oci:
+  objectstorage:
+    namespace: grrb8tx
+    bucket: aumigos-uploads

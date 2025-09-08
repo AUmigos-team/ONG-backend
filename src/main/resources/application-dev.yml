@@ -52,5 +52,4 @@ spring.security.user:
 oci:
   objectstorage:
     namespace: grrb8txifgz9
-    bucket: aumigos-uploads
-
+    bucket: aumigos-dev

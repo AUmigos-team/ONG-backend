@@ -16,13 +16,12 @@ spring:
   cloud:
     aws:
       region:
-        static: sa-saopaulo-1   # região do OCI SP
+        static: sa-saopaulo-1
         auto: false
       credentials:
         access-key: ${S3_ACCESS_KEY}
         secret-key: ${S3_SECRET_KEY}
       s3:
-        # namespace vem do Object Storage → Overview
         endpoint: "https://${S3_NAMESPACE}.compat.objectstorage.sa-saopaulo-1.oraclecloud.com"
         path-style-access: true
         bucket: ${S3_BUCKET:aumigos-uploads}
