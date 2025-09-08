@@ -2,6 +2,7 @@ package br.com.luzdosbichos.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -19,6 +20,7 @@ public class SecurityConfig {
         http
                 .securityMatcher("/**")
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(
                                 "/ping",
                                 "/actuator/health",
@@ -39,17 +41,22 @@ public class SecurityConfig {
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
-        var c = new CorsConfiguration();
+        CorsConfiguration c = new CorsConfiguration();
         c.setAllowedOrigins(List.of(
-                "https://app.santuarioluzdosbichos.org",
+                "https://santuarioluzdosbichos.org",
+                "https://www.santuarioluzdosbichos.org",
+                "https://ong-luz-dos-bichos.netlify.app",
                 "http://localhost:4200"
         ));
         c.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
-        c.setAllowedHeaders(List.of("*"));
+        c.setAllowedHeaders(List.of(
+                "Authorization", "Content-Type", "Accept", "Origin", "X-Requested-With"
+        ));
         c.setAllowCredentials(true);
+        c.setMaxAge(3600L);
 
-        var s = new UrlBasedCorsConfigurationSource();
-        s.registerCorsConfiguration("/**", c);
-        return s;
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", c);
+        return source;
     }
 }
