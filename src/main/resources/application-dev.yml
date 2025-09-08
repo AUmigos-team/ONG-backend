@@ -49,8 +49,8 @@ spring.security.user:
   name: admin
   password: admin123
 
-# === OCI Object Storage (use com.oracle.bmc:oci-java-sdk-objectstorage) ===
 oci:
   objectstorage:
-    namespace: grrb8txifgz9   # <-- seu namespace (confira no console do Object Storage)
-    bucket: ong-amigos-dev    # <-- nome do bucket que você criou
+    namespace: grrb8txifgz9
+    bucket: aumigos-uploads
+

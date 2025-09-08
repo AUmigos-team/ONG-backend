@@ -2,15 +2,12 @@ package br.com.luzdosbichos.storage;
 
 import com.oracle.bmc.objectstorage.ObjectStorage;
 import com.oracle.bmc.objectstorage.requests.PutObjectRequest;
-import com.oracle.bmc.objectstorage.responses.PutObjectResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
-import java.util.UUID;
 
 @Service
 @Primary
@@ -26,23 +23,22 @@ public class OciObjectStorageService implements StorageService {
     private String bucket;
 
     @Override
-    public String upload(MultipartFile file) {
-        try (InputStream is = file.getInputStream()) {
-            String objectName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-
+    public String upload(String objectName, InputStream data, String contentType, long contentLength) {
+        try {
             PutObjectRequest req = PutObjectRequest.builder()
                     .namespaceName(namespace)
                     .bucketName(bucket)
                     .objectName(objectName)
-                    .contentLength(file.getSize())
-                    .contentType(file.getContentType())
+                    .contentType(contentType)
+                    .contentLength(contentLength)
+                    .putObjectBody(data)
                     .build();
 
-            PutObjectResponse resp = objectStorage.putObject(req, is);
-            // Retorne a URL pública (se o bucket for público) ou apenas o nome do objeto
+            objectStorage.putObject(req);
             return objectName;
         } catch (Exception e) {
             throw new RuntimeException("Falha no upload para OCI Object Storage", e);
         }
     }
+
 }
