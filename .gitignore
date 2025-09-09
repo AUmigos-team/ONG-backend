@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+config
+oci_api_key.pem
