@@ -32,7 +32,7 @@ public class Animal {
     private Size size;
 
     @Column(nullable = false)
-    private int age;
+    private Integer age;
 
     @Column(nullable = false)
     private String story;
