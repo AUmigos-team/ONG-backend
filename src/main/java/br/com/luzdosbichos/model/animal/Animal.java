@@ -1,5 +1,8 @@
 package br.com.luzdosbichos.model.animal;
 
+import br.com.luzdosbichos.model.animal.enums.Gender;
+import br.com.luzdosbichos.model.animal.enums.Size;
+import br.com.luzdosbichos.model.animal.enums.TypeAnimal;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -13,8 +16,20 @@ public class Animal {
     @Column(nullable = false)
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TypeAnimal typeAnimal;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Gender gender;
+
     @Column(nullable = false)
     private String color;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Size size;
 
     @Column(nullable = false)
     private int age;
@@ -72,7 +87,7 @@ public class Animal {
 
     @Column(nullable = true)
     private Boolean good_with_dogs;
-    
+
     @Column(nullable = true)
     private Boolean good_with_strangers;
 }
