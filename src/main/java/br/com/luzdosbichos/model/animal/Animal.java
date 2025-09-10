@@ -90,4 +90,10 @@ public class Animal {
 
     @Column(nullable = true)
     private Boolean good_with_strangers;
+
+    @Column(nullable = false)
+    private String photoUrl;
+
+    @Column(nullable = true)
+    private Boolean adopted = false;
 }

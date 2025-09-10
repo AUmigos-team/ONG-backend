@@ -70,7 +70,9 @@ CREATE TABLE animal (
 	good_with_children BOOLEAN DEFAULT FALSE,
     good_with_cats BOOLEAN DEFAULT FALSE,
     good_with_dogs BOOLEAN DEFAULT FALSE,
-    good_with_strangers BOOLEAN DEFAULT FALSE
+    good_with_strangers BOOLEAN DEFAULT FALSE,
+    photoUrl TEXT NOT NULL,
+    adopted BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE adoption (
