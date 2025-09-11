@@ -36,7 +36,7 @@ public class AnimalController {
     )
     public ResponseEntity<Animal> saveAnimal(
             @RequestPart("animal") Animal animal,
-            @RequestPart(value = "photo", required = false)MultipartFile photo) {
+            @RequestPart(value = "photo", required = false) MultipartFile photo) {
 
         if(photo != null && !photo.isEmpty()) {
             String objectName = storageService.upload(photo);
