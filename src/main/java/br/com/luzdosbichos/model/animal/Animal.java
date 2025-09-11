@@ -91,7 +91,7 @@ public class Animal {
     @Column(nullable = true)
     private Boolean good_with_strangers;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String photoUrl;
 
     @Column(nullable = true)
