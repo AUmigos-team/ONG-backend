@@ -1,54 +1,61 @@
 package br.com.luzdosbichos.api.controller.animal;
 
 import br.com.luzdosbichos.model.animal.Animal;
+import br.com.luzdosbichos.model.animal.AnimalBase;
 import br.com.luzdosbichos.model.animal.enums.Gender;
 import br.com.luzdosbichos.model.animal.enums.Size;
-import br.com.luzdosbichos.model.animal.enums.TypeAnimal;
+import br.com.luzdosbichos.model.animal.enums.Type;
+import br.com.luzdosbichos.model.animal.req.AnimalRequestBody;
 import br.com.luzdosbichos.service.animal.AnimalService;
-import br.com.luzdosbichos.service.storage.StorageService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
-@RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
+@PreAuthorize("isAuthenticated()")
+@RestController
 @RequestMapping("/animal")
 public class AnimalController {
-    private final AnimalService animalService;
-    private final StorageService storageService;
 
-    @Value("${oci.objectstorage.namespace}")
-    private String namespace;
-    @Value("${oci.objectstorage.bucket}")
-    private String bucket;
+    // TODO: implementar paginação em todos os endpoints que retornam listas
+
+    private final AnimalService animalService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
             summary = "Register a new animal",
             description = "Creates a new animal record. An image can be uploaded together, " +
-                    "which will be stored in Oracle Cloud and its URL will be saved in the database."
+            "which will be stored in Oracle Cloud and its URL will be saved in the database."
     )
-    public ResponseEntity<Animal> saveAnimal(
-            @RequestPart("animal") Animal animal,
-            @RequestPart(value = "photo", required = false) MultipartFile photo) {
-
-        if(photo != null && !photo.isEmpty()) {
-            String objectName = storageService.upload(photo);
-            String photoUrl = String.format(
-                    "https://%s.compat.objectstorage.sa-saopaulo-1.oraclecloud.com/n/%s/b/%s/o/%s",
-                    namespace, namespace, bucket, objectName
-            );
-            animal.setPhotoUrl(photoUrl);
+    public ResponseEntity<?> saveAnimal(
+            @RequestPart("animal") AnimalBase animal,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
+        try {
+            AnimalRequestBody req = new AnimalRequestBody();
+            req.setAnimal(animal);
+            req.setImage(image);
+            return ResponseEntity.ok(animalService.saveAnimal(req));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
-
-        return ResponseEntity.ok(animalService.saveAnimal(animal));
     }
 
     @GetMapping("/{id}")
@@ -81,30 +88,30 @@ public class AnimalController {
         animalService.deleteAnimal(id);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
             summary = "Update animal",
             description = "Updates the details of an existing animal. If a new image is provided, " +
                     "it will replace the previous one in Oracle Cloud."
     )
-    public ResponseEntity<Animal> updateAnimal(
+    public ResponseEntity<?> updateAnimal(
             @PathVariable Integer id,
-            @RequestPart("animal") Animal animal,
-            @RequestPart(value = "photo", required = false) MultipartFile photo) {
+            @RequestPart("animal") AnimalBase animal,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
 
-        if(photo != null && !photo.isEmpty()) {
-            String objectName = storageService.upload(photo);
-            String photoUrl = String.format(
-                    "https://%s.compat.objectstorage.sa-saopaulo-1.oraclecloud.com/n/%s/b/%s/o/%s",
-                    namespace, namespace, bucket, objectName
-            );
-            animal.setPhotoUrl(photoUrl);
+        try {
+
+            AnimalRequestBody req = new AnimalRequestBody();
+            req.setAnimal(animal);
+            req.setImage(image);
+
+            return ResponseEntity.ok(animalService.updateAnimal(id, req));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
-
-        return ResponseEntity.ok(animalService.updateAnimal(id, animal));
     }
 
-    @GetMapping("/{filter}")
+    @GetMapping("/filter")
     @Operation(
             summary = "Get animals with filters",
             description = "Returns a filtered list of animals based on the given parameters. " +
@@ -112,14 +119,13 @@ public class AnimalController {
     )
     public ResponseEntity<List<Animal>> getAnimalsWithFilter(
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) TypeAnimal typeAnimal,
+            @RequestParam(required = false) Type type,
             @RequestParam(required = false) Gender gender,
             @RequestParam(required = false) Size size,
             @RequestParam(required = false) String color,
             @RequestParam(required = false) Integer age) {
-
         return ResponseEntity.ok(
-                animalService.getAnimalsWithFilter(name, typeAnimal, gender, size, color, age));
+                animalService.getAnimalsWithFilter(name, type, gender, size, color, age));
     }
 
     @PatchMapping("/{id}/adopted")
