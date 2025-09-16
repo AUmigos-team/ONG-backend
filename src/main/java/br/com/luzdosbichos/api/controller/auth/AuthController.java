@@ -3,7 +3,7 @@ package br.com.luzdosbichos.api.controller.auth;
 import br.com.luzdosbichos.model.account.Account;
 import br.com.luzdosbichos.model.account.auth.AuthRequest;
 import br.com.luzdosbichos.model.account.auth.RegisterRequest;
-import br.com.luzdosbichos.model.account.enums.AccountType;
+import br.com.luzdosbichos.model.account.enums.Type;
 import br.com.luzdosbichos.security.SecurityConfig;
 import br.com.luzdosbichos.service.account.AccountService;
 import br.com.luzdosbichos.util.JwtUtil;
@@ -81,7 +81,7 @@ public class AuthController {
             account.setPhone(req.getPhone());
             account.setCpf(req.getCpf());
             account.setGender(req.getGender());
-            account.setAccountType(AccountType.USERCOMMON);
+            account.setType(Type.USERCOMMON);
             account.setPassword(securityConfig.passwordEncoder().encode(req.getPassword()));
 
             accountService.save(account);
