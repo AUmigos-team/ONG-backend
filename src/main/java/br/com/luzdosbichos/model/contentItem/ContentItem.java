@@ -26,10 +26,9 @@ public class ContentItem {
     @Column(nullable = false)
     private String namespace;
 
-    @Column(name = "key", nullable = false)
+    @Column(nullable = false)
     private String key;
 
-    @Lob
     @Column(nullable = false, columnDefinition = "TEXT")
     private String data;
 

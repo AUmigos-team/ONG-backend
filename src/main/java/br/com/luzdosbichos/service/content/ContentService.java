@@ -5,9 +5,7 @@ import br.com.luzdosbichos.repository.content.ContentItemRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.OffsetDateTime;
 import java.util.Map;
@@ -22,11 +20,11 @@ public class ContentService {
     public String getContent(String ns, String key) {
         return contentItemRepository.findByNamespaceAndKey(ns, key)
                 .map(ContentItem::getData)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Conteúdo não encontrado"));
+                .orElseThrow(() -> new RuntimeException("Conteúdo não encontrado"));
     }
 
     public String upsertContent(String ns, String key, String json) {
-        var item = contentItemRepository.findByNamespaceAndKey(ns, key).orElseGet(ContentItem::new);
+        ContentItem item = contentItemRepository.findByNamespaceAndKey(ns, key).orElseGet(ContentItem::new);
 
         if (item.getId() == null) {
             item.setNamespace(ns);
@@ -42,10 +40,10 @@ public class ContentService {
     }
 
     public String patchContent(String ns, String key, Map<String, Object> partial) throws Exception {
-        var item = contentItemRepository.findByNamespaceAndKey(ns, key)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Conteúdo não encontrado"));
+        ContentItem item = contentItemRepository.findByNamespaceAndKey(ns, key)
+                .orElseThrow(() -> new RuntimeException("Conteúdo não encontrado"));
 
-        var node = (ObjectNode) mapper.readTree(item.getData());
+        ObjectNode node = (ObjectNode) mapper.readTree(item.getData());
         partial.forEach((k,v) -> node.set(k, mapper.valueToTree(v)));
 
         item.setData(mapper.writeValueAsString(node));
