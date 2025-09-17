@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Service
 @Primary
@@ -34,8 +36,10 @@ public class OciObjectStorageService implements StorageService {
                     .putObjectBody(data)
                     .build();
 
-            objectStorage.putObject(req);
-            return objectName;
+            return String.format(
+                    "https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/%s/b/%s/o/%s",
+                    namespace, bucket, URLEncoder.encode(objectName, StandardCharsets.UTF_8)
+            );
         } catch (Exception e) {
             throw new RuntimeException("Falha no upload para OCI Object Storage", e);
         }

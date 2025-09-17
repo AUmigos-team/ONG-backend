@@ -1,6 +1,6 @@
 package br.com.luzdosbichos.model.account.enums;
 
-public enum AccountType {
+public enum Type {
     ADMMASTER,
     ADMCOMMON,
     USERCOMMON;
