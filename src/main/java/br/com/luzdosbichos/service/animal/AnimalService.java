@@ -53,7 +53,6 @@ public class AnimalService {
                 .goodWithDogs(req.getAnimal().getGoodWithDogs())
                 .goodWithStrangers(req.getAnimal().getGoodWithStrangers())
                 .adopted(req.getAnimal().getAdopted())
-                .createdAt(LocalDateTime.now())
                 .build();
 
         if (req.getImage() != null && !req.getImage().isEmpty()) {
