@@ -1,5 +1,6 @@
 package br.com.luzdosbichos.model.animal;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +10,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -23,4 +27,8 @@ public class Animal extends AnimalBase {
     private Integer id;
 
     private String photoUrl;
+
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 }

@@ -54,7 +54,8 @@ CREATE TABLE animal (
     good_with_dogs BOOLEAN DEFAULT FALSE,
     good_with_strangers BOOLEAN DEFAULT FALSE,
     photo_url TEXT,
-    adopted BOOLEAN DEFAULT FALSE
+    adopted BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE adoption (
@@ -77,7 +78,8 @@ CREATE TABLE adoption (
     someone_is_allergic VARCHAR(255) NOT NULL,
     adopter_has_animals VARCHAR(255) NOT NULL,
     adopter_animals_castrated BOOLEAN NOT NULL DEFAULT FALSE,
-    adopter_animals_vaccinated BOOLEAN NOT NULL DEFAULT FALSE
+    adopter_animals_vaccinated BOOLEAN NOT NULL DEFAULT FALSE,
+    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE donation (
