@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS adoption;
 DROP TABLE IF EXISTS animal;
 DROP TABLE IF EXISTS account;
 DROP TABLE IF EXISTS contact;
+DROP TABLE IF EXISTS content_items;
 
 CREATE TABLE account (
     id BIGSERIAL PRIMARY KEY,
@@ -170,4 +171,14 @@ CREATE TABLE contact (
     email VARCHAR(255) NOT NULL,
     subject TEXT NOT NULL,
     message TEXT NOT NULL
+);
+
+CREATE TABLE content_items (
+    id BIGSERIAL PRIMARY KEY,
+    namespace VARCHAR(255) NOT NULL,
+    key VARCHAR(255) NOT NULL,
+    data TEXT NOT NULL,
+    version INT DEFAULT 1,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE(namespace, key)
 );

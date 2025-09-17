@@ -42,6 +42,7 @@ public class SecurityConfig {
                                 "/actuator/**",
                                 "/auth/register",
                                 "/auth/login",
+                                "/content/**",
                                 "/animal/**"
                         ).permitAll()
                         .anyRequest().authenticated()
