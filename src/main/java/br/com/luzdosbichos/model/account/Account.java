@@ -1,6 +1,6 @@
 package br.com.luzdosbichos.model.account;
 
-import br.com.luzdosbichos.model.account.enums.AccountType;
+import br.com.luzdosbichos.model.account.enums.Type;
 import br.com.luzdosbichos.model.account.enums.Gender;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
@@ -29,10 +29,10 @@ public class Account implements UserDetails {
     private String name;
 
     @Column(nullable = false, unique = true)
-    private String email;
+    private String cpf;
 
     @Column(nullable = false, unique = true)
-    private String cpf;
+    private String email;
 
     @Column(nullable = false)
     private String phone;
@@ -42,8 +42,8 @@ public class Account implements UserDetails {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "typeuser", nullable = false)
-    private AccountType accountType;
+    @Column(nullable = false)
+    private Type type;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
