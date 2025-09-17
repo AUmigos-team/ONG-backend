@@ -10,6 +10,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
+
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
@@ -23,4 +25,6 @@ public class Animal extends AnimalBase {
     private Integer id;
 
     private String photoUrl;
+
+    private LocalDateTime createdAt;
 }
