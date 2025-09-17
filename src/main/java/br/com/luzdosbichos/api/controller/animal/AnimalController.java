@@ -10,6 +10,8 @@ import br.com.luzdosbichos.service.animal.AnimalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,8 +36,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/animal")
 public class AnimalController {
-
-    // TODO: implementar paginação em todos os endpoints que retornam listas
 
     private final AnimalService animalService;
 
@@ -63,10 +63,11 @@ public class AnimalController {
             summary = "Get animal by ID",
             description = "Returns the details of a specific animal based on its ID."
     )
-    public ResponseEntity<Animal> getAnimalById(@PathVariable Integer id) {
+    public ResponseEntity<?> getAnimalById(@PathVariable Integer id) {
         return animalService.getById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .<ResponseEntity<?>>map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("message", "Animal with ID: " + id + " not found")));
     }
 
     @GetMapping
@@ -117,7 +118,9 @@ public class AnimalController {
             description = "Returns a filtered list of animals based on the given parameters. " +
                     "All parameters are optional and can be combined."
     )
-    public ResponseEntity<List<Animal>> getAnimalsWithFilter(
+    public ResponseEntity<Page<Animal>> getAnimalsWithFilter(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Type type,
             @RequestParam(required = false) Gender gender,
@@ -125,7 +128,7 @@ public class AnimalController {
             @RequestParam(required = false) String color,
             @RequestParam(required = false) Integer age) {
         return ResponseEntity.ok(
-                animalService.getAnimalsWithFilter(name, type, gender, size, color, age));
+                animalService.getAnimalsWithFilter(page, pageSize, name, type, gender, size, color, age));
     }
 
     @PatchMapping("/{id}/adopted")
@@ -141,20 +144,16 @@ public class AnimalController {
     }
 
     @Operation(
-            summary = "Get available animals",
-            description = "Returns the list of animals that are still available for adoption."
+            summary = "Get animals by adoption status",
+            description = "Returns a paginated list of animals filtered by their adoption status. " +
+                    "If `adopted=true`, returns adopted animals; if `adopted=false`, returns available animals. "
     )
-    @GetMapping("/available")
-    public ResponseEntity<List<Animal>> getAvailableAnimals() {
-        return ResponseEntity.ok(animalService.getAvailableAnimals());
-    }
-
-    @Operation(
-            summary = "Get adopted animals",
-            description = "Returns the list of animals that have already been adopted."
-    )
-    @GetMapping("/adopted")
-    public ResponseEntity<List<Animal>> getAdoptedAnimals() {
-        return ResponseEntity.ok(animalService.getAdoptedAnimals());
+    @GetMapping("/status")
+    public ResponseEntity<Page<Animal>> getByAdoptedStatus(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "true") Boolean adopted
+    ) {
+        return ResponseEntity.ok(animalService.getByAdoptedStatus(page, size, adopted));
     }
 }

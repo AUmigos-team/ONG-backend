@@ -8,10 +8,13 @@ import br.com.luzdosbichos.model.animal.req.AnimalRequestBody;
 import br.com.luzdosbichos.repository.animal.AnimalRepository;
 import br.com.luzdosbichos.service.storage.StorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,6 +53,7 @@ public class AnimalService {
                 .goodWithDogs(req.getAnimal().getGoodWithDogs())
                 .goodWithStrangers(req.getAnimal().getGoodWithStrangers())
                 .adopted(req.getAnimal().getAdopted())
+                .createdAt(LocalDateTime.now())
                 .build();
 
         if (req.getImage() != null && !req.getImage().isEmpty()) {
@@ -71,14 +75,17 @@ public class AnimalService {
         animalRepository.deleteById(id);
     }
 
-    public List<Animal> getAnimalsWithFilter(
+    public Page<Animal> getAnimalsWithFilter(
+            Integer page,
+            Integer pageSize,
             String name,
             Type type,
             Gender gender,
             Size size,
             String color,
             Integer age) {
-        return animalRepository.filterAnimals(name, type, gender, size, color, age);
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createdAt").descending());
+        return animalRepository.filterAnimals(name, type, gender, size, color, age, pageable);
     }
 
     public Animal updateAnimal(Integer id, AnimalRequestBody req) {
@@ -127,17 +134,8 @@ public class AnimalService {
         return animalRepository.save(animalExists);
     }
 
-    public List<Animal> getAvailableAnimals() {
-        return animalRepository.findAll().
-                stream().
-                filter(a -> Boolean.FALSE.equals(a.getAdopted())).
-                toList();
-    }
-
-    public List<Animal> getAdoptedAnimals() {
-        return animalRepository.findAll()
-                .stream()
-                .filter(a -> Boolean.TRUE.equals(a.getAdopted()))
-                .toList();
+    public Page<Animal> getByAdoptedStatus(Integer page, Integer size, Boolean adopted) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        return animalRepository.findByAdoptedStatus(adopted, pageable);
     }
 }
