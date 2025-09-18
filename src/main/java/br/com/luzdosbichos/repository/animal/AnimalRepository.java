@@ -4,11 +4,11 @@ import br.com.luzdosbichos.model.animal.Animal;
 import br.com.luzdosbichos.model.animal.enums.Gender;
 import br.com.luzdosbichos.model.animal.enums.Size;
 import br.com.luzdosbichos.model.animal.enums.Type;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import java.util.List;
 
 public interface AnimalRepository extends JpaRepository<Animal, Integer> {
     @Query("""
@@ -20,12 +20,16 @@ public interface AnimalRepository extends JpaRepository<Animal, Integer> {
           AND (:color IS NULL OR a.color LIKE %:color%)
           AND (:age IS NULL OR a.age = :age)
     """)
-    List<Animal> filterAnimals(
+    Page<Animal> filterAnimals(
             @Param("name") String name,
             @Param("type") Type type,
             @Param("gender") Gender gender,
             @Param("size") Size size,
             @Param("color") String color,
-            @Param("age") Integer age
+            @Param("age") Integer age,
+            Pageable pageable
     );
+
+    Page<Animal> findByAdoptedFalse(Pageable pageable);
+    Page<Animal> findByAdoptedTrue(Pageable pageable);
 }
